@@ -29,3 +29,5 @@
 2024-10-31 13:31:58.272 | INFO     | __main__:channel_rule:30 - rule check:msg.target_id is 3697666420119592
 2024-10-31 13:31:58.272 | INFO     | __main__:resp1:36 - receive msg is 6 card,3697666420119592,3890800523
 2024-10-31 13:31:59.306 | ERROR    | __main__:resp1:49 - 发送card失败：[{"type": "card", "size": "lg", "modules": [{"type": "countdown", "mode": "second", "startTime": 1730352681351, "endTime": 1730352771351}]}]
+2024-10-31 14:54:08.576 | INFO     | __main__:channel_rule:34 - rule check:msg.target_id is 3697666420119592
+2024-10-31 14:54:08.577 | INFO     | __main__:resp1:40 - receive msg is 6 card,3697666420119592,3890800523

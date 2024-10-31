@@ -1,5 +1,6 @@
 import json
 import time
+from pathlib import Path
 from khl import Bot, Message, command, EventTypes, Event
 from khl.card import Card, CardMessage, Module, Types, Element, Struct
 from loguru import logger
@@ -7,8 +8,10 @@ from datetime import datetime, timedelta
 import tools
 from khl.requester import HTTPRequester
 # from tools import c1,c2,c3,c4,c5,c6,c7
+import os
 
-data = tools.readYaml('config.yaml')
+config_file = os.path.join(Path(os.path.abspath(os.sep)),'config','robot.yaml')
+data = tools.readYaml(config_file)
 
 bot_xiaoliu = data['bot']['a6']
 bot = Bot(bot_xiaoliu)
