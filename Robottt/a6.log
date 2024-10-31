@@ -1,0 +1,31 @@
+2024-10-30 19:46:08.317 | INFO     | __main__:resp1:24 - receive msg is /6 111
+2024-10-30 19:47:43.434 | INFO     | __main__:resp1:24 - receive msg is /6 aaa
+2024-10-30 19:53:55.673 | INFO     | __main__:resp1:25 - receive msg is /6 aa
+2024-10-30 19:54:53.420 | INFO     | __main__:resp1:25 - receive msg is /6 card
+2024-10-30 20:15:26.969 | INFO     | __main__:resp1:25 - receive msg is /6 card
+2024-10-30 20:25:02.018 | INFO     | __main__:resp1:25 - receive msg is /6 card
+2024-10-30 20:26:03.970 | INFO     | __main__:resp1:25 - receive msg is /6 aa
+2024-10-30 20:37:50.481 | INFO     | __main__:resp1:25 - receive msg is .6 ni
+2024-10-30 20:38:04.866 | INFO     | __main__:resp1:25 - receive msg is /6 a
+2024-10-30 20:39:27.754 | INFO     | __main__:resp1:25 - receive msg is 6 66
+2024-10-30 20:47:31.819 | INFO     | __main__:resp1:24 - receive msg is 6 好奇怪
+2024-10-31 12:09:50.711 | INFO     | __main__:channel_rule:24 - rule check:msg.target_id is 3697666420119592
+2024-10-31 12:09:50.711 | INFO     | __main__:resp1:30 - receive msg is 6 你好,3697666420119592,3890800523
+2024-10-31 12:15:07.550 | INFO     | __main__:channel_rule:24 - rule check:msg.target_id is 3697666420119592
+2024-10-31 12:15:07.552 | INFO     | __main__:resp1:30 - receive msg is 6 qa,3697666420119592,3890800523
+2024-10-31 12:15:17.146 | INFO     | __main__:channel_rule:24 - rule check:msg.target_id is 3697666420119592
+2024-10-31 12:15:17.146 | INFO     | __main__:resp1:30 - receive msg is 6 你好,3697666420119592,3890800523
+2024-10-31 12:17:05.076 | INFO     | __main__:channel_rule:24 - rule check:msg.target_id is 3697666420119592
+2024-10-31 12:17:05.076 | INFO     | __main__:resp1:30 - receive msg is 6 card,3697666420119592,3890800523
+2024-10-31 12:20:47.525 | INFO     | __main__:channel_rule:28 - rule check:msg.target_id is 3697666420119592
+2024-10-31 12:20:47.525 | INFO     | __main__:resp1:34 - receive msg is 6 help,3697666420119592,3890800523
+2024-10-31 12:22:28.365 | INFO     | __main__:channel_rule:28 - rule check:msg.target_id is 3697666420119592
+2024-10-31 12:22:28.365 | INFO     | __main__:resp1:34 - receive msg is 6 help,3697666420119592,3890800523
+2024-10-31 12:59:11.632 | INFO     | __main__:channel_rule:28 - rule check:msg.target_id is 3697666420119592
+2024-10-31 12:59:11.633 | INFO     | __main__:resp1:34 - receive msg is 6 card,3697666420119592,3890800523
+2024-10-31 13:26:31.869 | INFO     | __main__:channel_rule:30 - rule check:msg.target_id is 3697666420119592
+2024-10-31 13:26:31.869 | INFO     | __main__:resp1:36 - receive msg is 6 card,3697666420119592,3890800523
+2024-10-31 13:26:32.594 | ERROR    | __main__:resp1:48 - 发送card失败：[{"type": "card", "size": "lg", "modules": [{"type": "countdown", "mode": "day", "endTime": 1730712385507}, {"type": "countdown", "mode": "hour", "endTime": 1730355985507}, {"type": "countdown", "mode": "second", "endTime": 1730355985507}]}, {"type": "card", "size": "lg", "modules": [{"type": "countdown", "mode": "second", "startTime": 1730352355507, "endTime": 1730352445507}]}]
+2024-10-31 13:31:58.272 | INFO     | __main__:channel_rule:30 - rule check:msg.target_id is 3697666420119592
+2024-10-31 13:31:58.272 | INFO     | __main__:resp1:36 - receive msg is 6 card,3697666420119592,3890800523
+2024-10-31 13:31:59.306 | ERROR    | __main__:resp1:49 - 发送card失败：[{"type": "card", "size": "lg", "modules": [{"type": "countdown", "mode": "second", "startTime": 1730352681351, "endTime": 1730352771351}]}]
