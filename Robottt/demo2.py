@@ -1,40 +1,42 @@
+import asyncio
 import json
+import subprocess
 import time
 from pathlib import Path
-from khl import Bot, Message, command, EventTypes, Event
+from khl import Bot, Message, command, EventTypes, Event, MessageTypes
 from khl.card import Card, CardMessage, Module, Types, Element, Struct
 from loguru import logger
 from datetime import datetime, timedelta
 import tools
+import logging
 from khl.requester import HTTPRequester
-# from tools import c1,c2,c3,c4,c5,c6,c7
+from tools import c1,c2,c3,c4,c5,c6,c7
 import os
 
-config_file = os.path.join(Path(os.path.abspath(os.sep)),'config','robot.yaml')
+config_file = os.path.join(Path(os.path.abspath(os.sep)), 'config', 'robot.yaml')
+press_file = os.path.join(Path(os.path.abspath(os.sep)), 'config', 'dummy.yaml')
 data = tools.readYaml(config_file)
+logging.basicConfig(level='INFO')
 
 bot_xiaoliu = data['bot']['a6']
 bot = Bot(bot_xiaoliu)
 channel_id_a6 = data['channel']['channel_a6']
-print(channel_id_a6)
 logger.add('a6.log', rotation='500MB', compression='zip')
 
 help = {
     'temp': '发送临时消息',
     'card': '发送卡片消息',
+    'single': '发送私聊消息',
 }
 
-async def exc_handlers(cmd: command.Command, exception: Exception, msg: Message):
-    print("get exception from", msg.author_id)
-    print("exception type:", type(exception))
 
-def channel_rule(msg:Message):
+def channel_rule(msg: Message):
     # 仅对 机器人阿6 这个频道做出响应
     logger.info(f'rule check:msg.target_id is {msg.target_id}')
     return msg.target_id in channel_id_a6
 
 
-@bot.command(name='6', prefixes=['/', '', '.'],rules=[channel_rule])
+@bot.command(name='6', prefixes=['/', '.'], rules=[channel_rule])
 async def resp1(msg: Message, *args):
     logger.info(f'receive msg is {msg.content},{msg.target_id},{msg.author_id}')
     reply_msg = None
@@ -58,30 +60,63 @@ async def resp1(msg: Message, *args):
         reply_msg = str(help)
         await msg.reply(reply_msg)
         return
+    if args and 'single' in args[0].lower():
+        target_user = await bot.client.fetch_user(msg.author_id)
+        current_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+        reply_msg = f'现在是北京时间 {current_time} , 我很想你'
+        await target_user.send(reply_msg)
+        return
     text = ''.join(args)
     reply_msg = f'Receive msg from {msg.author_id} is {msg.content} | Text is {text}'
     await msg.reply(reply_msg)
 
 
-def miao_rule(msg:Message):
+def miao_rule(msg: Message):
     logger.info(f'rule check:msg.content is {msg.content}')
-    return msg.content.find('miao')!= -1 or msg.content.find('喵')!= -1
+    return msg.content.find('miao') != -1 or msg.content.find('喵') != -1
 
-@bot.command(name='7', prefixes=['/', '', '.'], rules=[miao_rule])
-async def mention_me(msg: Message, *args):
+
+@bot.command(name='7', prefixes=['/', '.'], rules=[miao_rule])
+async def contain_miao(msg: Message, *args):
     text = ''.join(args)
     await msg.reply(f'Anyone call me ? what is {text}')
 
-@bot.command(name='now', prefixes=['/', '', '.'], case_sensitive=False)
+
+@bot.command(name='now', prefixes=['/', '.'], case_sensitive=False)
 async def mention_me(msg: Message, *args):
     current_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
-    await msg.reply(f'Now is {current_time}')
+    reply_msg = f'(met){msg.author_id}(met) 现在是 {current_time}'
+    await msg.reply(reply_msg)
 
 
+async def exc_handlers(cmd: command.Command, exception: Exception, msg: Message):
+    logger.error(f'Get exception from {msg.author_id}, type is {type(exception)}')
+    await msg.reply(f'遇到错误：{type(exception)}')
+
+
+@bot.command(name='presson', prefixes=['/', '.'], case_sensitive=False)
+async def presson(msg: Message, nums: int, times: str):
+    timestamp_seconds = int(time.time())
+    report_path = f'report_{timestamp_seconds}.html'
+    cmd = f'locust -f  .\createMessage4T.py --headless -u {nums} -r 1 -t {times} --html={report_path}'
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    await msg.reply(f'开始执行：{cmd}')
+    stdout_data, stderr_data = await asyncio.gather(
+        asyncio.to_thread(process.stdout.read),
+        asyncio.to_thread(process.stderr.read)
+    )
+    output = stderr_data.decode()
+    logger.info(f'生成报告：{report_path}')
+    file_url = await bot.client.create_asset(f'./{report_path}')
+    await msg.reply(file_url, type = MessageTypes.FILE)
+
+@bot.command(name='update', prefixes=['/', '.'], case_sensitive=False)
+async def update(msg: Message, *args):
+    obj = {'channels':args}
+    tools.writeYaml(press_file, obj)
+    await msg.reply(f'update done')
 
 count = 0
-
-
 @bot.on_event(EventTypes.MESSAGE_BTN_CLICK)
 async def btn_click_event(b: Bot, e: Event):
     print(f'Receive msg from {e.target_id}, body is {e.body}')
@@ -89,74 +124,6 @@ async def btn_click_event(b: Bot, e: Event):
     global count
     count += 1
     ret = await ch.send(f'Moody Blues stars ++, Now is {count}')
-
-
-c1 = Card(
-    Module.Header('这是~~标题内容~~'),
-    Module.Context('这是小字'),
-    Module.Section('这是正文:smile:'),
-    Module.Divider(),
-    color='#1f1f1f'
-)
-c2 = Card(
-    Module.Section(
-        Struct.Paragraph(
-            3,
-            Element.Text("**这是第一列**\n猴子", type=Types.Text.KMD),
-            Element.Text("**这是第二列**\n犀牛", type=Types.Text.KMD),
-            Element.Text("**这是第三列**\n熊猫", type=Types.Text.KMD),
-        )
-    )
-)
-img_src = 'https://img.kookapp.cn/attachments/2024-10/28/AHPVeUCJGN0k60si.jpeg'
-c3 = Card(
-    Module.Section(
-        Element.Text("忧郁蓝调", type=Types.Text.KMD),
-        Element.Image(src=img_src),
-        mode=Types.SectionMode.RIGHT
-    )
-)
-img2_src = 'https://img.kookapp.cn/attachments/2024-10/28/UosDrMqY4S0k60si.jpeg'
-img3_src = 'https://img.kookapp.cn/attachments/2024-10/28/DPxnfvQbD60k60si.jpeg'
-img4_src = 'https://img.kookapp.cn/attachments/2024-10/28/k96abDMXMH0k60si.jpeg'
-c4 = Card(
-    Module.ImageGroup(
-        Element.Image(src=img_src),
-        Element.Image(src=img2_src),
-        Element.Image(src=img3_src),
-        Element.Image(src=img4_src),
-    )
-)
-c5 = Card(
-    Module.Section(
-        Element.Text("忧郁蓝调", type=Types.Text.KMD),
-        Element.Button(
-            "点赞",
-            value="按钮值1",
-            click=Types.Click.RETURN_VAL,
-            theme=Types.Theme.INFO,
-        ),
-    )
-)
-c6 = Card(
-    Module.Countdown(
-        datetime.now() + timedelta(seconds=360000), mode=Types.CountdownMode.DAY
-    ),
-    Module.Countdown(
-        datetime.now() + timedelta(seconds=3600), mode=Types.CountdownMode.HOUR
-    ),
-    Module.Countdown(
-        datetime.now() + timedelta(seconds=3600), mode=Types.CountdownMode.SECOND
-    )
-
-)
-c7 = Card(
-    Module.Countdown(
-        datetime.now() + timedelta(seconds=60),
-        mode=Types.CountdownMode.SECOND,
-        start=datetime.now() - timedelta(seconds=30),
-    )
-)
 
 
 def createCard():

@@ -1,10 +1,16 @@
-import yaml
 from khl.card import Card, CardMessage, Module, Types, Element, Struct
 from datetime import datetime, timedelta
 
 def readYaml(file):
+    import yaml
     with open(file, 'r', encoding='utf-8') as fr:
         return yaml.load(fr, Loader=yaml.SafeLoader)
+
+def writeYaml(file, obj):
+    from ruamel import yaml
+    with open(file, 'w', encoding='utf-8') as fw:
+        # yaml.dump(obj, fw, Dumper=yaml.RoundTripDumper, allow_unicode=True)
+        yaml.YAML().dump(obj, fw)
 
 c1 = Card(
     Module.Header('这是~~标题内容~~'),
