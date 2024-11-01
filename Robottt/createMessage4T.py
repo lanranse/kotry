@@ -53,7 +53,7 @@ class UserBahavior(HttpUser):
         self.uid = uids[user_current]
         print(f'current user is {self.uid}')
 
-        body = f'{{"mobile":"{self.uid}","password":"kk123456","mobile_prefix":"86","remember":true}}'
+        body = f'{{"mobile":"{self.uid}","password":"","mobile_prefix":"86","remember":true}}'
         response = self.client.post(full_url,headers=header,data=body)
         if response.status_code == 200:
             auth_data = response.json()['token']
